@@ -6,7 +6,7 @@ interface ButtonProps {
   value: string,
   name: string,
   error?: string,
-  onChange: (e: React.FormEvent) => void
+  onChange: (e: React.FormEvent<{}>) => void
 }
 
 
@@ -28,7 +28,7 @@ export class TextInput extends React.Component<ButtonProps, {}> {
   // wrapperClass = 'form-group';
   // let wrapperClass = 'form-group';
 
-  onChange(e: React.FormEvent) {
+  onChange(e: React.FormEvent<{}>) {
 
     this.setState({ value: e.target });
   }

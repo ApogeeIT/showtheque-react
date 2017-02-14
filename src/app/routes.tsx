@@ -2,11 +2,10 @@ import * as React from 'react';
 import { Route, IndexRoute, Redirect, Router, hashHistory, browserHistory } from 'react-router';
 import * as ReactRouter from 'react-router';
 
-
-import App from './app';
+import { App } from './app';
 import HomeContainer from './home/containers/home.container';
 import ShowListContainer from './show/containers/show-list.container';
-import { ShowEditContainer } from './show/containers/show-edit.container';
+import ShowEditContainer from './show/containers/show-edit.container';
 
 /*export const routes = (
     <Router history={hashHistory} >

@@ -6,7 +6,7 @@ interface TextNumberInputProps {
   value: number,
   name: string,
   error?: string,
-  onChange: (e: React.FormEvent) => void
+  onChange: (e: React.FormEvent<{}>) => void
 }
 
 

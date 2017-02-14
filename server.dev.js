@@ -28,18 +28,20 @@ var compiler = webpack(config);
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath,
-  historyApiFallback: true
+  historyApiFallback: true,
+  hot:true
 }));
 
 app.use(webpackHotMiddleware(compiler, {
-  log: console.log
+  log: console.log,
+  hot:true
 }));
 
 app.get('*', function (req, res) {
   /*if(req.path.indexOf('.json') > 0) {
     res.sendFile(path.resolve(path.join(__dirname, req.path)));
   }  else {*/
-    res.sendFile(config.devServer.entryFile);
+    res.sendFile(config.devServer.contentBase + '/index.html');
   //}
 });
 

@@ -1,5 +1,5 @@
 import { Show } from '../models/show';
-import * as $  from 'jquery';
+import * as $ from 'jquery';
 
 export class ShowRepository {
 
@@ -27,8 +27,8 @@ export class ShowRepository {
         return new Promise((resolve, reject) => {
 
             this.getShows().then((shows: Show[]) => {
-                let idx = shows.findIndex(s => s.id == id);
-                let show : Show;
+                let idx = shows.findIndex(s => s.id === id);
+                let show: Show;
                 if (idx >= 0) {
                     show = shows[idx];
                     shows.splice(idx, 1);
@@ -45,11 +45,11 @@ export class ShowRepository {
         return new Promise((resolve, reject) => {
 
             setTimeout(() => {
-            this.getShows().then(
-                shows => resolve(shows.find(s => s.id == id)),
-                err => reject(err))    
+                this.getShows().then(
+                    shows => resolve(shows.find(s => s.id === id)),
+                    err => reject(err))
             }, 500);
-            
+
 
         });
     }
@@ -60,7 +60,7 @@ export class ShowRepository {
             this.getShows().then(shows => {
 
                 if (show.id) {
-                    let idx = shows.findIndex(s => s.id == show.id);
+                    let idx = shows.findIndex(s => s.id === show.id);
                     shows.splice(idx, 1, show);
                 } else {
                     show.id = shows.reduce<any>((a, b) => { return { id: Math.max(a.id, b.id) } }, { id: 0 }).id + 1;
