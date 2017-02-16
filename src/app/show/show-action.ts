@@ -1,9 +1,12 @@
 import { Action } from 'redux';
 import { Show } from './models/show';
+import * as $ from 'jquery';
 
 export interface IShowAction extends Action {
     type: string;
     value?: Show;
+    values?: Show[];
+    request?: any;
 }
 
 export class ShowAction {
@@ -11,28 +14,68 @@ export class ShowAction {
     static SHOW_ADD = 'SHOW_ADD';
     static SHOW_REMOVE = 'SHOW_REMOVE';
     static SHOW_GET_ALL = 'SHOW_GET_ALL';
+    static SHOW_GET_ALL_SUCCESS = 'SHOW_GET_ALL_SUCCESS';
+    static SHOW_GET_ALL_ERROR = 'SHOW_GET_ALL_ERROR';
     static SHOW_GET_ONE = 'SHOW_GET_ONE';
+    static SHOW_GET_ONE_SUCCESS = 'SHOW_GET_ONE_SUCCESS';
     static SHOW_UPDATE = 'SHOW_UPDATE';
 
-    static addShow = (show: Show): IShowAction => ({
+    constructor(private _dispatch: any) {
+
+    }
+
+    public addShow = (show: Show): IShowAction => ({
         type: ShowAction.SHOW_ADD,
         value: show
     })
 
-    static removeShow = (show: Show): IShowAction => ({
+    public removeShow = (show: Show): IShowAction => this._dispatch({
         type: ShowAction.SHOW_REMOVE,
         value: show
     })
 
-    static getShows = (): IShowAction => ({
-        type: ShowAction.SHOW_GET_ALL
+    public getShows = (): void => {
+
+        let req = $.get('/api/shows.json').then((ok: any) => {
+            setTimeout(() => {
+                this._dispatch(this.getShowsSuccess(ok.entities));
+            }, 500);
+        });
+
+        this._dispatch({
+            type: ShowAction.SHOW_GET_ALL
+        });
+    }
+
+    private getShowsSuccess = (shows: Show[]): IShowAction => ({
+        type: ShowAction.SHOW_GET_ALL_SUCCESS,
+        values: shows
     })
 
-    static getShow = (id: number): IShowAction => ({
-        type: ShowAction.SHOW_GET_ONE
+    static getShowsError = (): IShowAction => ({
+        type: ShowAction.SHOW_GET_ALL_ERROR
     })
 
-    static updateShow = (show: Show): IShowAction => ({
+    public getShow = (id: number): void => {
+
+        let req = $.get('/api/shows.json').then((ok: any) => {
+            setTimeout(() => {
+                let show = ok.entities.find((e: Show) => e.id === id);
+                this._dispatch(this.getShowSuccess(show));
+            }, 500);
+        });
+
+        this._dispatch({
+            type: ShowAction.SHOW_GET_ONE
+        });
+    }
+
+    private getShowSuccess = (show: Show): IShowAction => ({
+        type: ShowAction.SHOW_GET_ONE_SUCCESS,
+        value: show
+    })
+
+    public updateShow = (show: Show): IShowAction => ({
         type: ShowAction.SHOW_UPDATE
     })
 

@@ -19,7 +19,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    saveShow: (show: Show) => void;
+    updateShow: (show: Show) => void;
     getShow: (id: number) => void;
 }
 
@@ -41,7 +41,7 @@ class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & Ro
         //this.state = new StateState();
         //this.state.id = +this.props.params['id'] || 0;
 
-        console.log(this.props.params['id']);
+        this.props.getShow(+this.props.params['id']);
 
 
 
@@ -81,7 +81,7 @@ class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & Ro
         if (!this.props.show) {
             return (
                 <div>
-                    <h1>Shows&nbsp;<small>Edit #{this.props.show.id}</small></h1>
+                    <h1>Shows&nbsp;<small>Edit #{this.props.show && this.props.show.id}</small></h1>
                     <div>
                         <Loading />
                     </div>
@@ -96,7 +96,7 @@ class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & Ro
                 <form>
                     <hr />
                     <h2>Show properties</h2>
-                    <TextInput label="Title" onChange={(e) => this.onChange(e)} name="title" value={this.props.show.title} error="une errue" />
+                    <TextInput label="Title" name="title" value={this.props.show.title} error="une errue" />
                     <TextNumberInput label="Title" onChange={(e) => this.onChange(e)} name="year" value={this.props.show.year} />
                     <hr />
                     <h2>Seasons</h2>
@@ -113,16 +113,17 @@ class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & Ro
 }
 
 
-const mapStateToProps = (state: IShowStore) => {
+const mapStateToProps = (state: IShowStore, ) => {
     return {
-        show: state.shows[0]
+        show: state.show
     };
 };
 
-const mapDispatchToProps = (dispatch: (fn: any) => void): DispatchProps => {
+const mapDispatchToProps = (dispatch: any): DispatchProps => {
+    let actions = new ShowAction(dispatch);
     return {
-        saveShow: (show: Show) => dispatch(ShowAction.updateShow(show)),
-        getShow: (id: number) => dispatch(ShowAction.getShow(id))
+        updateShow: actions.updateShow,
+        getShow: actions.getShow
     };
 };
 

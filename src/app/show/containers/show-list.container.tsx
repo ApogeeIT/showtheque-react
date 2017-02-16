@@ -6,33 +6,36 @@ import { connect } from 'react-redux';
 import { Show } from '../models/show';
 import { Loading } from '../../common/components/loading.component'
 import { ShowRepository } from '../services/show-repository.service';
-import { ShowAction} from '../show-action';
+import { ShowAction } from '../show-action';
+
 
 interface StateProps {
     shows: Show[];
+    loading: boolean;
 }
 
 interface DispatchProps {
     addShow: (show: Show) => void;
     removeShow: (show: Show) => void;
+    getShows: () => void;
 }
 
 class ShowListContainer extends React.Component<StateProps & DispatchProps, StateProps> {
 
-    /*
-        constructor(props: IShowStore & DispatchProps, context: any) {
-            super(props, context);
-    
-              
-            //this.setState({});
-            
-    
-            ShowRepository.getShows().then(shows => {
-                this.state.shows = shows;
-                this.setState(this.state);
-            });
-        }
-    }*/
+
+    constructor(props: IShowStore & DispatchProps, context: any) {
+        super(props, context);
+        this.props.getShows();
+
+        //this.setState({});
+
+        /*    
+                ShowRepository.getShows().then(shows => {
+                    this.state.shows = shows;
+                    this.setState(this.state);
+                });
+            }*/
+    }
 
     showRow(show: Show, index: number) {
         return (
@@ -60,9 +63,9 @@ class ShowListContainer extends React.Component<StateProps & DispatchProps, Stat
 
     render() {
 
-        const { shows } = this.props;
+        const { shows, loading } = this.props;
 
-        if (!shows) {
+        if (loading) {
             return (
                 <div>
                     {this.header()}
@@ -95,14 +98,18 @@ class ShowListContainer extends React.Component<StateProps & DispatchProps, Stat
     }
 }
 
-
 let mapStateToProps = (state: IShowStore): StateProps => ({
-    shows: state.shows
+    shows: state.shows,
+    loading: state.loading
 });
 
-let mapDispatchToProps = (dispatch: (fn: any) => void): DispatchProps => ({
-    addShow: (show: Show) => dispatch(ShowAction.addShow(show)),
-    removeShow: (show: Show) => dispatch(ShowAction.removeShow(show))
-});
+let mapDispatchToProps = (dispatch: any): DispatchProps => {
+    let actions = new ShowAction(dispatch);
+    return {
+        addShow: actions.addShow,
+        removeShow: actions.removeShow,
+        getShows: actions.getShows
+    };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShowListContainer);

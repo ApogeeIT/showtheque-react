@@ -6,7 +6,7 @@ interface ButtonProps {
   value: string,
   name: string,
   error?: string,
-  onChange: (e: React.FormEvent<{}>) => void
+  //onChange: (e: React.FormEvent<{}>) => void
 }
 
 
@@ -29,8 +29,8 @@ export class TextInput extends React.Component<ButtonProps, {}> {
   // let wrapperClass = 'form-group';
 
   onChange(e: React.FormEvent<{}>) {
-
-    this.setState({ value: e.target });
+    console.log(e);
+    //this.setState({ value: e.target });
   }
 
   render() {
@@ -45,7 +45,7 @@ export class TextInput extends React.Component<ButtonProps, {}> {
             className="form-control"
             placeholder={this.props.placeholder}
             value={this.props.value}
-            onChange={this.props.onChange}
+            onChange={this.onChange}
             />
           {this.props.error && <div className="alert alert-danger">{this.props.error}</div>}
         </div>
