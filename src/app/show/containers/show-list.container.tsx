@@ -25,16 +25,8 @@ class ShowListContainer extends React.Component<StateProps & DispatchProps, Stat
 
     constructor(props: IShowStore & DispatchProps, context: any) {
         super(props, context);
+
         this.props.getShows();
-
-        //this.setState({});
-
-        /*    
-                ShowRepository.getShows().then(shows => {
-                    this.state.shows = shows;
-                    this.setState(this.state);
-                });
-            }*/
     }
 
     showRow(show: Show, index: number) {

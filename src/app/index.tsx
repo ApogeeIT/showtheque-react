@@ -1,3 +1,4 @@
+import { store } from './store';
 import { Show } from './show/models/show';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -14,14 +15,14 @@ import '../scss/app.scss';
 declare var module: any;
 declare var require: any;
 
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { showReducer, IShowStore } from './show/show.reducer';
+/*import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { ShowRepositoryReducer, IShowStore } from './show/show.reducer';*/
 
 /*const reducers = combineReducers({
   showReducer
 });*/
 
-let initialState: IShowStore = {
+/*let initialState: IShowStore = {
   shows: [new Show(), new Show()],
   show: undefined,
   loading: false
@@ -31,7 +32,9 @@ initialState.shows[0].id = 1;
 initialState.shows[0].title = 'le tritre';
 initialState.shows[1].id = 2;
 
-let store = createStore(showReducer, initialState);
+let showReducer = new ShowRepositoryReducer();
+
+let store = createStore(showReducer.reduce, initialState);*/
 
 /*if (module.hot) {
   module.hot.accept('../reducers', () => {

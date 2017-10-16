@@ -1,21 +1,26 @@
 import * as React from 'react';
 
-interface ButtonProps {
+export class ITextInputProps {
   label: string;
   placeholder?: string;
-  value: string,
-  name: string,
-  error?: string,
-  //onChange: (e: React.FormEvent<{}>) => void
+  name: string;
+  error?: string;
+  onChange: (e: React.FormEvent<{}>) => void;
+}
+
+class TextInputProps extends ITextInputProps {
+  value: string;
 }
 
 
-export class TextInput extends React.Component<ButtonProps, {}> {
+export class TextInput extends React.Component<TextInputProps, { }> {
 
   private wrapperClass: string;
 
-  constructor(props?: ButtonProps, context?: any) {
+  constructor(props?: TextInputProps, context?: any) {
     super(props, context);
+
+    this.state = { value: this.props.value };
 
     this.wrapperClass = 'form-group';
 
@@ -24,15 +29,6 @@ export class TextInput extends React.Component<ButtonProps, {}> {
       this.wrapperClass += ' has-error';
     }
   }
-
-  // wrapperClass = 'form-group';
-  // let wrapperClass = 'form-group';
-
-  onChange(e: React.FormEvent<{}>) {
-    console.log(e);
-    //this.setState({ value: e.target });
-  }
-
   render() {
 
     return (
@@ -45,8 +41,8 @@ export class TextInput extends React.Component<ButtonProps, {}> {
             className="form-control"
             placeholder={this.props.placeholder}
             value={this.props.value}
-            onChange={this.onChange}
-            />
+            onChange={(e) => this.props.onChange(e)}
+          />
           {this.props.error && <div className="alert alert-danger">{this.props.error}</div>}
         </div>
       </div>

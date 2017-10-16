@@ -1,3 +1,4 @@
+import { store } from '../store';
 import { Action } from 'redux';
 import { Show } from './models/show';
 import * as $ from 'jquery';
@@ -36,15 +37,23 @@ export class ShowAction {
 
     public getShows = (): void => {
 
-        let req = $.get('/api/shows.json').then((ok: any) => {
-            setTimeout(() => {
-                this._dispatch(this.getShowsSuccess(ok.entities));
-            }, 500);
-        });
+        let shows = store.getState().shows;
 
-        this._dispatch({
-            type: ShowAction.SHOW_GET_ALL
-        });
+        if (shows && shows.length) {
+            //this._dispatch(this.getShowsSuccess(shows));
+        } else {
+            let req = $.get('/api/shows.json').then((ok: any) => {
+                setTimeout(() => {
+                    this._dispatch(this.getShowsSuccess(ok.entities));
+                }, 500);
+            });
+
+            this._dispatch({
+                type: ShowAction.SHOW_GET_ALL
+            });
+        }
+
+
     }
 
     private getShowsSuccess = (shows: Show[]): IShowAction => ({
@@ -62,7 +71,7 @@ export class ShowAction {
             setTimeout(() => {
                 let show = ok.entities.find((e: Show) => e.id === id);
                 this._dispatch(this.getShowSuccess(show));
-            }, 500);
+            }, 5000);
         });
 
         this._dispatch({
@@ -70,13 +79,14 @@ export class ShowAction {
         });
     }
 
-    private getShowSuccess = (show: Show): IShowAction => ({
+    private getShowSuccess = (show: Show): IShowAction => this._dispatch({
         type: ShowAction.SHOW_GET_ONE_SUCCESS,
         value: show
     })
 
-    public updateShow = (show: Show): IShowAction => ({
-        type: ShowAction.SHOW_UPDATE
+    public updateShow = (show: Show): IShowAction => this._dispatch({
+        type: ShowAction.SHOW_UPDATE,
+        value: show
     })
 
 }

@@ -30,7 +30,7 @@ var config = {
     },
     devServer: {
         contentBase: path.resolve(__dirname, 'src'),
-        port: 8081,
+        port: 8088,
         //entry: path.resolve(__dirname, 'src/index.html')
     },
     resolve: {

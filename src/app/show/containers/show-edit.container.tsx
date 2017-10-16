@@ -1,6 +1,6 @@
 import { IShowStore } from '../show.reducer';
 import * as React from 'react';
-import { Link, RouterState } from 'react-router';
+import { Link, RouterState, RouterProps } from 'react-router';
 import { connect } from 'react-redux';
 
 
@@ -12,7 +12,7 @@ import { TextNumberInput } from '../../common/components/text-number-input.compo
 import { Loading } from '../../common/components/loading.component'
 
 import { ShowRepository } from '../services/show-repository.service';
-import {ShowAction} from '../show-action';
+import { ShowAction } from '../show-action';
 
 interface StateProps {
     show: Show;
@@ -24,51 +24,43 @@ interface DispatchProps {
 }
 
 abstract class AppFormComppnent<P, S> extends React.Component<P, S> {
+
+    constructor(props: P, context: S, private _name: string) {
+        super(props, context);
+    }
+
     protected onChange(e: React.FormEvent<{}>): void {
         let event: any = e, entity: any = this.state;
-        entity['show'][event.target.name] = event.target.value;
+        entity[this._name][event.target.name] = event.target.value;
         let tmp: any = {};
-        tmp['show'] = entity['show'];
+        tmp[this._name] = entity[this._name];
         this.setState(tmp);
     }
 }
 
-class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & RouterState, StateProps> {
+class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & RouterProps & RouterState, StateProps> {
 
-    constructor(props: StateProps & DispatchProps & RouterState, context: any) {
-        super(props, context);
-
-        //this.state = new StateState();
-        //this.state.id = +this.props.params['id'] || 0;
+    constructor(props: StateProps & DispatchProps & RouterProps & RouterState, context: StateProps) {
+        super(props, context, 'show');
 
         this.props.getShow(+this.props.params['id']);
+    }
 
+    onChange2(e: React.FormEvent<{}>): void {
+        this.onChange(e);
+        this.props.updateShow(this.state.show);
+    }
 
-
-        /*
-        if (this.state.id) {
-            ShowRepository.getShow(this.state.id).then(show => {
-                show.seasons = [new Season(1)];
-                //this.state.show = show;
-                this.setState(this.state)
-            });
-        } else {
-            //this.state.show = new Show();
-        }*/
-
-        /*
-        this.state.show.id = +this.props.params['id'] || 0;
-        this.state.show.title = 'le nouveau';
-        this.state.show.year = 2015;*/
-
-
+    save(e: React.FormEvent<{}>) {
+        e.preventDefault();
+        this.props.updateShow(this.state.show);
     }
 
     renderSeason(s: Season[]) {
 
         if (s) {
             return (
-                <div>{s.map(a => <span>{a.number}</span>)}</div>
+                <div>{s.map(a => <span key={a.number}>{a.number}</span>)}</div>
             );
         } else {
             return (<div></div>);
@@ -89,15 +81,19 @@ class ShowEditContainer extends AppFormComppnent<StateProps & DispatchProps & Ro
             );
         }
 
+        if (!this.state) {
+            this.state = { show: this.props.show };
+        }
+
         return (
 
             <div>
                 <h1>Shows&nbsp;<small>Edit #{this.props.show.id}</small></h1>
-                <form>
+                <form onSubmit={(e) => this.save(e)}>
                     <hr />
                     <h2>Show properties</h2>
-                    <TextInput label="Title" name="title" value={this.props.show.title} error="une errue" />
-                    <TextNumberInput label="Title" onChange={(e) => this.onChange(e)} name="year" value={this.props.show.year} />
+                    <TextInput label="Title" name="title" onChange={(e) => this.onChange2(e)} value={this.props.show.title} />
+                    <TextNumberInput label="Year" name="year" onChange={(e) => this.onChange(e)} value={this.props.show.year} />
                     <hr />
                     <h2>Seasons</h2>
                     <blockquote>
